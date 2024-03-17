@@ -2,7 +2,7 @@
 
 <template>
   <div id="box">
-    <div class="test-box">app</div>
+    <van-button type="primary">按钮</van-button>
   </div>
 </template>
 
