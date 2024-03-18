@@ -7,7 +7,7 @@ const fn = () => {
 
 <template>
   <div class="login-page">
-    <CpNavBar title="登录" right-text="注册" @click-right="fn" />
+    <CpNavBar title="登录" right-text="注册" :on-back="fn" />
   </div>
 </template>
 
