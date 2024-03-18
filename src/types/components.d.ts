@@ -1,5 +1,6 @@
-import CpNavBar from '@/components/CpNavBar.vue'
+import type CpNavBar from '@/components/CpNavBar.vue'
 import type CpRadioBtn from '@/components/CpRadioBtn.vue'
+import type CpIcon from '@/components/CpIcon.vue'
 
 // 声明 vue 类型模块
 declare module 'vue' {
@@ -9,5 +10,6 @@ declare module 'vue' {
     // typeof 作用是得到对应的TS类型
     CpNavBar: typeof CpNavBar
     CpRadioBtn: typeof CpRadioBtn
+    CpIcon: typeof CpIcon
   }
 }
