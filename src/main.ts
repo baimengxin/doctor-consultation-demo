@@ -3,6 +3,8 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+// svg 打包
+import 'virtual:svg-icons-register'
 
 // 代码高亮，代码提示
 import {} from 'vant'

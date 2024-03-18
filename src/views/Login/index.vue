@@ -15,6 +15,10 @@ const gender = ref(0)
         { label: '未知', value: 2 }
       ]"
     />
+    <svg aria-hidden="true">
+      <!-- #icon-文件夹名称-图片名称 -->
+      <use href="#icon-login-eye-off" />
+    </svg>
   </div>
 </template>
 
