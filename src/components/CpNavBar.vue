@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import router from '@/router'
+import { useRouter } from 'vue-router'
 
 interface Props {
   title?: string
@@ -7,13 +7,16 @@ interface Props {
   onBack?: () => void
 }
 
-// 接收父组件的值
-const props = defineProps<Props>()
-
 interface Emits {
   (e: 'click-right'): void
 }
+
+// 接收父组件的值
+const props = defineProps<Props>()
+// 子组件事件
 const emit = defineEmits<Emits>()
+// 路由
+const router = useRouter()
 
 // 封装 clcikLeft 函数，支持默认回退
 const onClickLeft = () => {
