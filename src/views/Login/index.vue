@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { loginApi } from '@/services/user'
+import { useUserStore } from '@/stores'
 import { mobileRules, passwordRules } from '@/utils/rules'
 import { showToast } from 'vant'
 import { ref } from 'vue'
@@ -12,6 +13,7 @@ const isShow = ref(true)
 // 是否同意
 const isSelect = ref(false)
 const router = useRouter()
+const store = useUserStore()
 
 // 表单提交，通过校验规则后才会触发
 const onSubmit = async () => {
@@ -24,10 +26,12 @@ const onSubmit = async () => {
 
   // 存储本地
   localStorage.setItem('user', JSON.stringify(res.data))
+  // 存储数据到 store 中
+  store.saveUser(res.data)
   // 提示用户
   showToast('登录成功')
   // 跳转路由
-  router.push('/')
+  // router.push('/')
 }
 </script>
 
