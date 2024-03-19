@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { loginApi } from '@/services/user'
 import { useUserStore } from '@/stores'
-import { mobileRules, passwordRules } from '@/utils/rules'
+import { codeRules, mobileRules, passwordRules } from '@/utils/rules'
 import { showToast } from 'vant'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -16,6 +16,7 @@ const router = useRouter()
 const store = useUserStore()
 // 验证码登录的显示隐藏
 const isCode = ref(false)
+const code = ref('')
 
 // 表单提交，通过校验规则后才会触发
 const onSubmit = async () => {
@@ -52,6 +53,7 @@ const onSubmit = async () => {
 
     <!-- form 表单 -->
     <van-form autocomplete="off" @submit="onSubmit">
+      <!-- 手机号 -->
       <van-field
         v-model="mobile"
         :rules="mobileRules"
@@ -75,9 +77,15 @@ const onSubmit = async () => {
       </van-field>
 
       <!-- 验证码 -->
-      <van-field v-show="!isCode" placeholder="请输入验证码" type="tel">
+      <van-field
+        v-show="!isCode"
+        v-model="code"
+        :rules="codeRules"
+        placeholder="请输入验证码"
+        type="digit"
+      >
         <template #button>
-          <span>验证码发送</span>
+          <span class="btn-send">验证码发送</span>
         </template>
       </van-field>
       <div class="cp-cell">
@@ -152,6 +160,10 @@ const onSubmit = async () => {
         padding: 0 5px;
       }
     }
+  }
+
+  .btn-send {
+    color: var(--cp-primary);
   }
 }
 </style>
