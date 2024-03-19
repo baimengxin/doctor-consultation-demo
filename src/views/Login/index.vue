@@ -31,7 +31,7 @@ const onSubmit = async () => {
   // 提示用户
   showToast('登录成功')
   // 跳转路由
-  // router.push('/')
+  router.push('/')
 }
 </script>
 
