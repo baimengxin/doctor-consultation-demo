@@ -17,6 +17,25 @@ const store = useUserStore()
 // 验证码登录的显示隐藏
 const isCode = ref(false)
 const code = ref('')
+// 验证码秒数
+const second = ref(0)
+
+// 验证码倒计时函数
+const sendCode = () => {
+  // 防止用户多次点击，频繁触发
+  if (second.value > 0) return
+
+  // 验证码发送时，初始为 60秒
+  second.value = 60
+  let timeId = setInterval(() => {
+    second.value--
+
+    // 秒数为 0，关闭定时器
+    if (second.value === 0) {
+      clearInterval(timeId)
+    }
+  }, 1000)
+}
 
 // 表单提交，通过校验规则后才会触发
 const onSubmit = async () => {
@@ -85,9 +104,11 @@ const onSubmit = async () => {
         type="digit"
       >
         <template #button>
-          <span class="btn-send">验证码发送</span>
+          <span v-show="second === 0" class="btn-send" @click="sendCode">验证码发送</span>
+          <span v-show="second > 0">{{ second }}s后再次发送</span>
         </template>
       </van-field>
+
       <div class="cp-cell">
         <van-checkbox v-model="isSelect">
           <span>我已同意</span>
