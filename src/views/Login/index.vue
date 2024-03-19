@@ -14,6 +14,8 @@ const isShow = ref(true)
 const isSelect = ref(false)
 const router = useRouter()
 const store = useUserStore()
+// 验证码登录的显示隐藏
+const isCode = ref(false)
 
 // 表单提交，通过校验规则后才会触发
 const onSubmit = async () => {
@@ -41,9 +43,9 @@ const onSubmit = async () => {
     <cp-nav-bar right-text="注册"></cp-nav-bar>
 
     <div class="login-head">
-      <h3>密码登录</h3>
-      <a href="javascript:;">
-        <span>短信验证码登录</span>
+      <h3>{{ isCode ? '密码登录' : '短信验证码登录' }}</h3>
+      <a href="javascript:;" @click="isCode = !isCode">
+        <span>{{ isCode ? '短信验证码登录' : '密码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
@@ -56,11 +58,26 @@ const onSubmit = async () => {
         placeholder="请输入手机号"
         type="tel"
       ></van-field>
-      <van-field v-model="password" :rules="passwordRules" placeholder="请输入密码" type="password">
+
+      <!-- 请输入密码 -->
+      <van-field
+        v-show="isCode"
+        v-model="password"
+        :rules="passwordRules"
+        placeholder="请输入密码"
+        type="password"
+      >
         <template #button>
           <div @click="isShow = !isShow">
             <CpIcon :name="isShow ? 'login-eye-off' : 'login-eye-on'" />
           </div>
+        </template>
+      </van-field>
+
+      <!-- 验证码 -->
+      <van-field v-show="!isCode" placeholder="请输入验证码" type="tel">
+        <template #button>
+          <span>验证码发送</span>
         </template>
       </van-field>
       <div class="cp-cell">
