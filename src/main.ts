@@ -6,6 +6,9 @@ import pinia from './stores'
 // svg 打包
 import 'virtual:svg-icons-register'
 
+// 进度条
+import 'nprogress/nprogress.css'
+
 // 代码高亮，代码提示
 import {} from 'vant'
 // 全局导入样式

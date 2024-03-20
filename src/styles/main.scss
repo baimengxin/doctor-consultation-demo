@@ -46,3 +46,7 @@ ol {
   // 覆盖vant主体色
   --van-primary-color: var(--cp-primary);
 }
+
+#nprogress .bar {
+  background-color: var(--cp-primary) !important;
+}
