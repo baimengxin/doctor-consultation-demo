@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { loginApi } from '@/services/user'
+import { loginApi, sendCodeApi, loginByCodeApi } from '@/services/user'
 import { useUserStore } from '@/stores'
 import { codeRules, mobileRules, passwordRules } from '@/utils/rules'
-import { showToast } from 'vant'
-import { ref } from 'vue'
+import { showToast, showFailToast } from 'vant'
+import { ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 // 表单校验
 const mobile = ref('13230000001')
@@ -16,18 +16,36 @@ const router = useRouter()
 const store = useUserStore()
 // 验证码登录的显示隐藏
 const isCode = ref(false)
+// 验证码
 const code = ref('')
 // 验证码秒数
 const second = ref(0)
 
+// 定时器id
+let timeId: number
+
+// 验证码和密码切换
+const changeCode = () => {
+  isCode.value = !isCode.value
+}
+
 // 验证码倒计时函数
-const sendCode = () => {
+const sendCode = async () => {
   // 防止用户多次点击，频繁触发
   if (second.value > 0) return
 
+  try {
+    const res = await sendCodeApi(mobile.value)
+    showToast('发送成功')
+    code.value = res.data.code
+    console.log(res)
+  } catch (error) {
+    return showFailToast('验证码已经发送，请等待60秒后再点击')
+  }
+
   // 验证码发送时，初始为 60秒
   second.value = 60
-  let timeId = setInterval(() => {
+  timeId = setInterval(() => {
     second.value--
 
     // 秒数为 0，关闭定时器
@@ -44,7 +62,9 @@ const onSubmit = async () => {
   }
 
   // 请求数据
-  const res = await loginApi(mobile.value, password.value)
+  const res = isCode.value
+    ? await loginApi(mobile.value, password.value)
+    : await loginByCodeApi(mobile.value, code.value)
 
   // 存储本地
   localStorage.setItem('user', JSON.stringify(res.data))
@@ -55,6 +75,11 @@ const onSubmit = async () => {
   // 跳转路由
   router.push('/')
 }
+
+// 组件卸载时，移除定时器
+onUnmounted(() => {
+  clearInterval(timeId)
+})
 </script>
 
 <template>
@@ -64,7 +89,7 @@ const onSubmit = async () => {
 
     <div class="login-head">
       <h3>{{ isCode ? '密码登录' : '短信验证码登录' }}</h3>
-      <a href="javascript:;" @click="isCode = !isCode">
+      <a href="javascript:;" @click="changeCode">
         <span>{{ isCode ? '短信验证码登录' : '密码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
@@ -86,7 +111,7 @@ const onSubmit = async () => {
         v-model="password"
         :rules="passwordRules"
         placeholder="请输入密码"
-        type="password"
+        :type="isShow ? 'password' : 'text'"
       >
         <template #button>
           <div @click="isShow = !isShow">
